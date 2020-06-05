@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="C:/Users/Quentin/.p2/pool/plugins/org.eclipse.ui.workbench_3.118.0.v20200222-0719.jar" sourcepath="C:/Users/Quentin/.p2/pool/plugins/org.eclipse.ui.workbench_3.118.0.v20200222-0719.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Quentin/.p2/pool/plugins/com.ibm.icu_64.2.0.v20190507-1337.jar" sourcepath="C:/Users/Quentin/.p2/pool/plugins/com.ibm.icu_64.2.0.v20190507-1337.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Quentin/.p2/pool/plugins/org.eclipse.ui.forms_3.9.0.v20200213-1442.jar" sourcepath="C:/Users/Quentin/.p2/pool/plugins/org.eclipse.ui.forms_3.9.0.v20200213-1442.jar"/>
+	<classpathentry kind="lib" path="swing2swt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

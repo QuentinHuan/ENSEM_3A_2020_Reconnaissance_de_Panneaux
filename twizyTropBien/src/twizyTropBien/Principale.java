@@ -1,108 +1,151 @@
 package twizyTropBien;
 
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.StatusLineManager;
-import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.window.ApplicationWindow;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.layout.FillLayout;
 
-public class Principale extends ApplicationWindow {
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
-	/**
-	 * Create the application window.
-	 */
-	public Principale() {
-		super(null);
-		createActions();
-		addToolBar(SWT.FLAT | SWT.WRAP);
-		addMenuBar();
-		addStatusLine();
-	}
+import javax.imageio.ImageIO;
 
-	/**
-	 * Create contents of the application window.
-	 * @param parent
-	 */
-	@Override
-	protected Control createContents(Composite parent) {
-		Composite container = new Composite(parent, SWT.NONE);
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.layout.GridData;
+import swing2swt.layout.BorderLayout;
+import org.eclipse.swt.custom.StackLayout;
+import swing2swt.layout.FlowLayout;
+import swing2swt.layout.BoxLayout;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.widgets.Text;
 
-		return container;
-	}
+public class Principale {
 
-	/**
-	 * Create the actions.
-	 */
-	private void createActions() {
-		// Create the actions
-	}
+	protected Shell shell;
+	private Text text;
+	
+	private int currentImg = 0;
+	private int imgDataBaseLenght = 3;
+	private ArrayList<Image> dataBase;
 
-	/**
-	 * Create the menu manager.
-	 * @return the menu manager
-	 */
-	@Override
-	protected MenuManager createMenuManager() {
-		MenuManager menuManager = new MenuManager("menu");
-		return menuManager;
-	}
-
-	/**
-	 * Create the toolbar manager.
-	 * @return the toolbar manager
-	 */
-	@Override
-	protected ToolBarManager createToolBarManager(int style) {
-		ToolBarManager toolBarManager = new ToolBarManager(style);
-		return toolBarManager;
-	}
-
-	/**
-	 * Create the status line manager.
-	 * @return the status line manager
-	 */
-	@Override
-	protected StatusLineManager createStatusLineManager() {
-		StatusLineManager statusLineManager = new StatusLineManager();
-		return statusLineManager;
-	}
-
+	Canvas canvas;
+	
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		try {
 			Principale window = new Principale();
-			window.setBlockOnOpen(true);
 			window.open();
-			Display.getCurrent().dispose();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Configure the shell.
-	 * @param newShell
+	 * Open the window.
 	 */
-	@Override
-	protected void configureShell(Shell newShell) {
-		super.configureShell(newShell);
-		newShell.setText("New Application");
+	public void open() {
+		Display display = Display.getDefault();
+		createContents();
+		shell.open();
+		shell.layout();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
 	}
+	
+	void nextImage(int dir)
+	{
+		if(dir == 1)
+		{
+			currentImg = (currentImg+1)%imgDataBaseLenght;
+		}
+		else
+		{
+			currentImg =((currentImg+imgDataBaseLenght-1)%imgDataBaseLenght);
+		}
+		
+		canvas.setBackgroundImage(dataBase.get(currentImg));
+	}
+	
+	
+	
 
 	/**
-	 * Return the initial size of the window.
+	 * Create contents of the window.
 	 */
-	@Override
-	protected Point getInitialSize() {
-		return new Point(450, 300);
-	}
+	protected void createContents() {
+		
+		dataBase = new ArrayList<Image>();
+		for (int i = 0; i < imgDataBaseLenght; i++) {
+			Image img = new Image(Display.getDefault(),"img"+Integer.toString(i)+".png");
+			System.out.println("img"+Integer.toString(i)+".png");
+			dataBase.add(img);
+		}		
+		
+		
+		
+		shell = new Shell();
+		shell.setSize(450, 300);
+		shell.setText("SWT Application");
+		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
+		
+		
+		SashForm sashForm = new SashForm(shell, SWT.NONE);
+		
+		SashForm sashForm_1 = new SashForm(sashForm, SWT.VERTICAL);
+		
+		Group group = new Group(sashForm_1, SWT.NONE);
+		group.setLayout(new FillLayout(SWT.HORIZONTAL));
+		
+		Button btnNewButton = new Button(group, SWT.NONE);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				nextImage(-1);
+			}
+		});
+		btnNewButton.setText("<-");
+		
+		Button btnIdentify = new Button(group, SWT.NONE);
+		btnIdentify.setText("Identify");
+		
+		Button btnNewButton_1 = new Button(group, SWT.NONE);
+		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				nextImage(1);
+			}
+		});
+		btnNewButton_1.setText("->");
+		
+		Group group_1 = new Group(sashForm_1, SWT.NONE);
+		group_1.setLayout(new FillLayout(SWT.HORIZONTAL));
+		
+		text = new Text(group_1, SWT.BORDER);
+		sashForm_1.setWeights(new int[] {1, 5});
+		
+		canvas = new Canvas(sashForm, SWT.NONE);
+		//anvas.setBackgroundImage(img);		
+		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		canvas.setLayout(new StackLayout());
+		sashForm.setWeights(new int[] {1, 5});
 
+	}
 }
