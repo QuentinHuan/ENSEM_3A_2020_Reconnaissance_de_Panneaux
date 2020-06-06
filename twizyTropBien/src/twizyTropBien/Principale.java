@@ -67,8 +67,8 @@ public class Principale {
 		shell.layout();
 		
 		PrintStream printStream = new PrintStream(new CustomOutputStream(Console));
-	/*	System.setOut(printStream);
-		System.setErr(printStream);*/
+		System.setOut(printStream);
+		System.setErr(printStream);
 		
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -89,6 +89,9 @@ public class Principale {
 		}
 		lblNewLabel.setImage(dataBase.get(currentImg));
 		//canvas.setBackgroundImage(dataBase.get(currentImg));
+		Console.setText("");
+		System.out.println("#####################");
+		System.out.println("Image "+(currentImg+1));
 	}
 
 	
@@ -161,12 +164,10 @@ public class Principale {
 		group_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Console = new Label(group_1, SWT.NONE);
-		Console.setText("New Label");
 		
 		sashForm_1.setWeights(new int[] {1, 5});
 		
 		lblNewLabel = new Label(sashForm, SWT.NONE);
-		lblNewLabel.setText("New Label");
 		sashForm.setWeights(new int[] {1, 5});
 
 	}

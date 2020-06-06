@@ -1,6 +1,6 @@
 package twizyTropBien;
 
-
+import org.opencv.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,6 +9,8 @@ import javax.swing.JLabel;
 import org.eclipse.swt.widgets.Label;
 import org.opencv.core.*;
 import org.opencv.highgui.*;
+import org.opencv.imgproc.Imgproc;
+
 import twizyTropBien.MaBibliothequeTraitementImageEtendue;
 import utilitaireAgreg.MaBibliothequeTraitementImage;
 public class TraitementImage {
@@ -34,7 +36,10 @@ public class TraitementImage {
 			objetrond=MaBibliothequeTraitementImage.DetectForm(m,contour);
 
 			if (objetrond!=null){
-				//MaBibliothequeTraitementImageEtendue.afficheImage("Objet rond detécté", objetrond,lblNewLabel);
+				
+				Scalar color = new Scalar(255, 255, 255);
+				Imgproc.drawContours(m, ListeContours, -1,color);
+				MaBibliothequeTraitementImageEtendue.afficheImage("Objet rond detécté",m,lblNewLabel);
 				scores[0]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"ref30.jpg");
 				scores[1]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"ref50.jpg");
 				scores[2]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"ref70.jpg");
