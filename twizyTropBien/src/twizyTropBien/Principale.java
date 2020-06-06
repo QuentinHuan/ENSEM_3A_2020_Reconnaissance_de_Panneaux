@@ -31,6 +31,8 @@ import swing2swt.layout.BoxLayout;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Text;
 
+import twizyTropBien.TraitementImage;
+
 public class Principale {
 
 	protected Shell shell;
@@ -93,8 +95,8 @@ public class Principale {
 	protected void createContents() {
 		
 		dataBase = new ArrayList<Image>();
-		for (int i = 0; i < imgDataBaseLenght; i++) {
-			Image img = new Image(Display.getDefault(),"img"+Integer.toString(i)+".png");
+		for (int i = 1; i < imgDataBaseLenght+1; i++) {
+			Image img = new Image(Display.getDefault(),"s_p"+Integer.toString(i)+".jpg");
 			System.out.println("img"+Integer.toString(i)+".png");
 			dataBase.add(img);
 		}		
@@ -124,6 +126,12 @@ public class Principale {
 		btnNewButton.setText("<-");
 		
 		Button btnIdentify = new Button(group, SWT.NONE);
+		btnIdentify.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TraitementImage.Identify();
+			}
+		});
 		btnIdentify.setText("Identify");
 		
 		Button btnNewButton_1 = new Button(group, SWT.NONE);

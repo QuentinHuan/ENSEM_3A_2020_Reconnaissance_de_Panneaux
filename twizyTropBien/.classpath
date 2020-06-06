@@ -2,7 +2,11 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenCV-2.4.6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenCV-2.4.6">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/Quentin/Documents/LibJava/opencv/build/x64"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Quentin/.p2/pool/plugins/org.eclipse.osgi_3.15.200.v20200214-1600.jar" sourcepath="C:/Users/Quentin/.p2/pool/plugins/org.eclipse.osgi_3.15.200.v20200214-1600.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Quentin/.p2/pool/plugins/org.eclipse.core.commands_3.9.700.v20191217-1850.jar" sourcepath="C:/Users/Quentin/.p2/pool/plugins/org.eclipse.core.commands_3.9.700.v20191217-1850.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Quentin/.p2/pool/plugins/org.eclipse.equinox.common_3.11.0.v20200206-0817.jar" sourcepath="C:/Users/Quentin/.p2/pool/plugins/org.eclipse.equinox.common_3.11.0.v20200206-0817.jar"/>
@@ -16,5 +20,7 @@
 	<classpathentry kind="lib" path="C:/Users/Quentin/.p2/pool/plugins/com.ibm.icu_64.2.0.v20190507-1337.jar" sourcepath="C:/Users/Quentin/.p2/pool/plugins/com.ibm.icu_64.2.0.v20190507-1337.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Quentin/.p2/pool/plugins/org.eclipse.ui.forms_3.9.0.v20200213-1442.jar" sourcepath="C:/Users/Quentin/.p2/pool/plugins/org.eclipse.ui.forms_3.9.0.v20200213-1442.jar"/>
 	<classpathentry kind="lib" path="swing2swt.jar"/>
+	<classpathentry kind="lib" path="Mabiblio.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Quentin/Documents/LibJava/opencv/build/java/opencv-2413.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
