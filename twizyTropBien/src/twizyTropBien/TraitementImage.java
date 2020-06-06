@@ -3,18 +3,22 @@ package twizyTropBien;
 
 import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.JLabel;
+
+import org.eclipse.swt.widgets.Label;
 import org.opencv.core.*;
 import org.opencv.highgui.*;
 import twizyTropBien.MaBibliothequeTraitementImageEtendue;
 import utilitaireAgreg.MaBibliothequeTraitementImage;
 public class TraitementImage {
 
-	public static void Identify()
+	public static void Identify(String img, Label lblNewLabel)
 	{
 		//Ouverture le l'image et saturation des rouges
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		Mat m=Highgui.imread("s_p10.jpg",Highgui.CV_LOAD_IMAGE_COLOR);
-		MaBibliothequeTraitementImageEtendue.afficheImage("Image testée", m);
+		Mat m=Highgui.imread(img,Highgui.CV_LOAD_IMAGE_COLOR);
+		MaBibliothequeTraitementImageEtendue.afficheImage("Image testée", m,lblNewLabel);
 		Mat transformee=MaBibliothequeTraitementImageEtendue.transformeBGRversHSV(m);
 		//la methode seuillage est ici extraite de l'archivage jar du meme nom 
 		Mat saturee=MaBibliothequeTraitementImage.seuillage(transformee, 6, 170, 110);
@@ -30,7 +34,7 @@ public class TraitementImage {
 			objetrond=MaBibliothequeTraitementImage.DetectForm(m,contour);
 
 			if (objetrond!=null){
-				MaBibliothequeTraitementImage.afficheImage("Objet rond detécté", objetrond);
+				//MaBibliothequeTraitementImageEtendue.afficheImage("Objet rond detécté", objetrond,lblNewLabel);
 				scores[0]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"ref30.jpg");
 				scores[1]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"ref50.jpg");
 				scores[2]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"ref70.jpg");
@@ -47,12 +51,12 @@ public class TraitementImage {
 				if(scoremax<0){System.out.println("Aucun Panneau détécté");}
 				else{switch(indexmax){
 				case -1:;break;
-				case 0:System.out.println("Panneau 30 détécté");break;
-				case 1:System.out.println("Panneau 50 détécté");break;
-				case 2:System.out.println("Panneau 70 détécté");break;
-				case 3:System.out.println("Panneau 90 détécté");break;
-				case 4:System.out.println("Panneau 110 détécté");break;
-				case 5:System.out.println("Panneau interdiction de dépasser détécté");break;
+				case 0:System.out.println("Panneau 30 detecte");break;
+				case 1:System.out.println("Panneau 50 detecte");break;
+				case 2:System.out.println("Panneau 70 detecte");break;
+				case 3:System.out.println("Panneau 90 detecte");break;
+				case 4:System.out.println("Panneau 110 detecte");break;
+				case 5:System.out.println("Panneau interdiction de depasser detecte");break;
 				}}
 
 			}

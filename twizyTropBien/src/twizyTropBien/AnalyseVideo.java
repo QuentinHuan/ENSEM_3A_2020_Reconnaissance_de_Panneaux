@@ -38,7 +38,7 @@ import org.opencv.highgui.VideoCapture;
 public class AnalyseVideo {
 	static { 
 	    try {
-	    System.load("C:\\Users\\ASUS\\eclipse\\OpenCV\\opencv\\build\\x64\\vc12\\bin\\opencv_ffmpeg2413_64.dll");
+	    //System.load("./opencv_ffmpeg2413_64.dll");
 	    } catch (UnsatisfiedLinkError e) {
 	        System.err.println("Native code library failed to load.\n" + e);
 	        System.exit(1);
@@ -46,14 +46,14 @@ public class AnalyseVideo {
 	}
 
 
-	public static void main(String[] args) {
+	public static void Analyse() {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
 		// Create new MAT object
 		Mat frame = new Mat();
 
 		// Create new VideoCapture object
-		VideoCapture camera = new VideoCapture("C:\\Users\\ASUS\\eclipse-workspace\\TroisiemeActivite\\video1.mp4");
+		VideoCapture camera = new VideoCapture("video1.mp4");
 
 		// Create new JFrame object
 		JFrame jframe = new JFrame("Video Title");

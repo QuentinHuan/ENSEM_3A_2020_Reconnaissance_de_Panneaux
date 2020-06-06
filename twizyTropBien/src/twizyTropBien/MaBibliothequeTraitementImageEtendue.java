@@ -2,7 +2,12 @@ package twizyTropBien;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.awt.image.DirectColorModel;
+import java.awt.image.IndexColorModel;
+import java.awt.image.RenderedImage;
+import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +23,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -39,6 +50,8 @@ import org.opencv.features2d.Features2d;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
+import javafx.embed.swing.SwingFXUtils;
+
 public class MaBibliothequeTraitementImageEtendue {
 	//Contient toutes les méthodes necessaires à la transformation des images
 
@@ -58,8 +71,62 @@ public class MaBibliothequeTraitementImageEtendue {
 		return channels;
 	}
 
+	   public static ImageData convertToSWT(BufferedImage bufferedImage) {
+	        if (bufferedImage.getColorModel() instanceof DirectColorModel) {
+	            DirectColorModel colorModel
+	                    = (DirectColorModel) bufferedImage.getColorModel();
+	            PaletteData palette = new PaletteData(colorModel.getRedMask(),
+	                    colorModel.getGreenMask(), colorModel.getBlueMask());
+	            ImageData data = new ImageData(bufferedImage.getWidth(),
+	                    bufferedImage.getHeight(), colorModel.getPixelSize(),
+	                    palette);
+	            WritableRaster raster = bufferedImage.getRaster();
+	            int[] pixelArray = new int[3];
+	            for (int y = 0; y < data.height; y++) {
+	                for (int x = 0; x < data.width; x++) {
+	                    raster.getPixel(x, y, pixelArray);
+	                    int pixel = palette.getPixel(new RGB(pixelArray[0],
+	                            pixelArray[1], pixelArray[2]));
+	                    data.setPixel(x, y, pixel);
+	                }
+	            }
+	            return data;
+	        }
+	        else if (bufferedImage.getColorModel() instanceof IndexColorModel) {
+	            IndexColorModel colorModel = (IndexColorModel)
+	                    bufferedImage.getColorModel();
+	            int size = colorModel.getMapSize();
+	            byte[] reds = new byte[size];
+	            byte[] greens = new byte[size];
+	            byte[] blues = new byte[size];
+	            colorModel.getReds(reds);
+	            colorModel.getGreens(greens);
+	            colorModel.getBlues(blues);
+	            RGB[] rgbs = new RGB[size];
+	            for (int i = 0; i < rgbs.length; i++) {
+	                rgbs[i] = new RGB(reds[i] & 0xFF, greens[i] & 0xFF,
+	                        blues[i] & 0xFF);
+	            }
+	            PaletteData palette = new PaletteData(rgbs);
+	            ImageData data = new ImageData(bufferedImage.getWidth(),
+	                    bufferedImage.getHeight(), colorModel.getPixelSize(),
+	                    palette);
+	            data.transparentPixel = colorModel.getTransparentPixel();
+	            WritableRaster raster = bufferedImage.getRaster();
+	            int[] pixelArray = new int[1];
+	            for (int y = 0; y < data.height; y++) {
+	                for (int x = 0; x < data.width; x++) {
+	                    raster.getPixel(x, y, pixelArray);
+	                    data.setPixel(x, y, pixelArray[0]);
+	                }
+	            }
+	            return data;
+	        }
+	        return null;
+	    }
+	
 	//Methode qui permet d'afficher une image sur un panel
-	public static void afficheImage(String title, Mat img){
+	public static void afficheImage(String title, Mat img, Label imgLabel){
 		MatOfByte matOfByte=new MatOfByte();
 		Highgui.imencode(".png",img,matOfByte);
 		byte[] byteArray=matOfByte.toArray();
@@ -67,11 +134,18 @@ public class MaBibliothequeTraitementImageEtendue {
 		try{
 			InputStream in=new ByteArrayInputStream(byteArray);
 			bufImage=ImageIO.read(in);
+			
+			File outputfile = new File("temp.jpg");
+			
+			ImageIO.write(bufImage, "jpg", outputfile);
+			imgLabel.setImage(new Image(Display.getDefault(),"temp.jpg"));
+			//imgLabel.setImage(new Image(Display.getCurrent(),convertToSWT(bufImage)));
+			/*
 			JFrame frame=new JFrame();
 			frame.setTitle(title);
 			frame.getContentPane().add(new JLabel(new ImageIcon(bufImage)));
 			frame.pack();
-			frame.setVisible(true);
+			frame.setVisible(true);*/
 
 		}
 		catch(Exception e){

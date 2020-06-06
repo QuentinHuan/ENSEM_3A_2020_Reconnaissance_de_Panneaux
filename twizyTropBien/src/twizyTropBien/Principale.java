@@ -6,9 +6,11 @@ import org.eclipse.swt.layout.FillLayout;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.JTextArea;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -36,13 +38,11 @@ import twizyTropBien.TraitementImage;
 public class Principale {
 
 	protected Shell shell;
-	private Text text;
-	
+	Label lblNewLabel;
+	Label Console;
 	private int currentImg = 0;
-	private int imgDataBaseLenght = 3;
+	private int imgDataBaseLenght = 10;
 	private ArrayList<Image> dataBase;
-
-	Canvas canvas;
 	
 	/**
 	 * Launch the application.
@@ -65,6 +65,11 @@ public class Principale {
 		createContents();
 		shell.open();
 		shell.layout();
+		
+		PrintStream printStream = new PrintStream(new CustomOutputStream(Console));
+	/*	System.setOut(printStream);
+		System.setErr(printStream);*/
+		
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -82,11 +87,10 @@ public class Principale {
 		{
 			currentImg =((currentImg+imgDataBaseLenght-1)%imgDataBaseLenght);
 		}
-		
-		canvas.setBackgroundImage(dataBase.get(currentImg));
+		lblNewLabel.setImage(dataBase.get(currentImg));
+		//canvas.setBackgroundImage(dataBase.get(currentImg));
 	}
-	
-	
+
 	
 
 	/**
@@ -129,10 +133,20 @@ public class Principale {
 		btnIdentify.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TraitementImage.Identify();
+				TraitementImage.Identify("s_p"+Integer.toString(currentImg+1)+".jpg",lblNewLabel);
 			}
 		});
 		btnIdentify.setText("Identify");
+		
+		Button btnNewButton_2 = new Button(group, SWT.NONE);
+		btnNewButton_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				AnalyseVideo.Analyse();
+			}
+		});
+		
+		btnNewButton_2.setText("Video");
 		
 		Button btnNewButton_1 = new Button(group, SWT.NONE);
 		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
@@ -146,13 +160,13 @@ public class Principale {
 		Group group_1 = new Group(sashForm_1, SWT.NONE);
 		group_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		text = new Text(group_1, SWT.BORDER);
+		Console = new Label(group_1, SWT.NONE);
+		Console.setText("New Label");
+		
 		sashForm_1.setWeights(new int[] {1, 5});
 		
-		canvas = new Canvas(sashForm, SWT.NONE);
-		//anvas.setBackgroundImage(img);		
-		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-		canvas.setLayout(new StackLayout());
+		lblNewLabel = new Label(sashForm, SWT.NONE);
+		lblNewLabel.setText("New Label");
 		sashForm.setWeights(new int[] {1, 5});
 
 	}
