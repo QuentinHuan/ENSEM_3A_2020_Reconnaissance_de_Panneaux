@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -72,24 +73,28 @@ public class AnalyseVideo {
 
 		// make jframe visible
 		jframe.setVisible(true);
+		
+		HashMap<Integer, Mat> bestFrames = new HashMap<Integer, Mat>();
+		HashMap<Integer, Integer> bestSim = new HashMap<Integer, Integer>();
 		Mat transformee,saturee,objetrond;
 		List<MatOfPoint> ListeContours;
 		int tbuff=6;
 		int[] nulltab = new int[tbuff];
 		for(int i=0;i<tbuff;i++) {nulltab[i]=-1;}
 		int[] buffer=nulltab.clone();
+		int[] tab;
 		// j->indice dans le buffer, p->valeur temporaire de similitude
 		// r->s'incrémente jusqu'à rmax tant que aucun panneau
-		int j=0,p,r=0,rmax=10;
-		while (true) {
+		int j=0,p,r=0,rmax=10,bestp=-1,sim=0;
+		Mat frametemp=null;
+		while (camera.read(frame)) {
 			// If next video frame is available
-			if (camera.read(frame)) {
+			//if (camera.read(frame)) {
 				
 				transformee=MaBibliothequeTraitementImageEtendue.transformeBGRversHSV(frame);
 				//la methode seuillage est ici extraite de l'archivage jar du meme nom 
 				saturee=MaBibliothequeTraitementImage.seuillage(transformee, 6, 170, 110);
 				objetrond = null;
-
 				//Création d'une liste des contours à partir de l'image saturée
 				ListeContours= MaBibliothequeTraitementImageEtendue .ExtractContours(saturee);
 				//Pour tous les contours de la liste
@@ -97,13 +102,21 @@ public class AnalyseVideo {
 					// isole la forme
 					objetrond=MaBibliothequeTraitementImage.DetectForm(frame,contour);
 					// calcul de la similitude
-					p=identifiepanneau(objetrond);
+					tab=(identifiepanneau(objetrond));p=tab[0];
 					// si panneau détecté on l'ajoute au buffer 
-					if(p>=0) {buffer[j]=p;r=0;}
+					if(p>=0) {buffer[j]=p;r=0;sim=tab[1];frametemp=frame.clone();}
 					// sinon on vide le buffer quand r==rmax
 					else {r++;if(r>rmax)buffer=nulltab.clone();}
 					// on affiche ensuite le panneau le plus représenté dans le buffer
-					j=(j+1)%tbuff;if(j==0) {bestPanneau(buffer);}}
+					j=(j+1)%tbuff;
+					if(j==0) {
+						bestp=bestPanneau(buffer);
+						if(bestp>=0) {
+						if(bestFrames.containsKey(bestp)) {
+							if(bestSim.get(bestp)<sim) {bestFrames.replace(bestp, frametemp);bestSim.replace(bestp, sim);}
+						}
+						else {bestFrames.put(bestp, frametemp);bestSim.put(bestp, sim);}}
+					}}
 				// Create new image icon object and convert Mat to Buffered
 				// Image
 				ImageIcon image = new ImageIcon(Mat2BufferedImage(frame));
@@ -112,8 +125,9 @@ public class AnalyseVideo {
 				// Update the vidPanel in the JFrame
 				vidPanel.repaint();
 
-			}
+			//}
 		}
+		for(int key : bestFrames.keySet()) {MaBibliothequeTraitementImage.afficheImage("similitude : "+bestSim.get(key)/1000, bestFrames.get(key));}
 	}
 
 	public static BufferedImage Mat2BufferedImage(Mat m) {
@@ -149,9 +163,10 @@ public class AnalyseVideo {
 
 
 
-	public static int identifiepanneau(Mat objetrond){
+	public static int[] identifiepanneau(Mat objetrond){
 		double [] scores=new double [6];
 		int indexmax=-1;
+		double scoremax=-1;
 		if (objetrond!=null){
 			scores[0]=MaBibliothequeTraitementImage.tauxDeSimilitude(objetrond,"ref30.jpg");
 			scores[1]=MaBibliothequeTraitementImage.tauxDeSimilitude(objetrond,"ref50.jpg");
@@ -166,17 +181,18 @@ public class AnalyseVideo {
 			scores[4]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"ref110.jpg");
 			scores[5]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"refdouble.jpg");*/
 
-			double scoremax=scores[0];
+			scoremax=scores[0];
 
 			for(int j=1;j<scores.length;j++){
 				if (scores[j]>scoremax){scoremax=scores[j];indexmax=j;}}
 		}
-		return indexmax;
+		int s = (int)(scoremax*1000);
+		int[] tab={indexmax,s};
+		return tab;
 	}
 	
 	
 	public static int bestPanneau(int[] buffer){
-		int n=buffer.length;
 		ArrayList<Integer> freq = new ArrayList<Integer>();
 		ArrayList<Integer> parcouru = new ArrayList<Integer>();
 		for(int ind:buffer) {
