@@ -38,12 +38,12 @@ import org.opencv.core.Mat;
 import org.opencv.highgui.VideoCapture;
 public class AnalyseVideo {
 	static { 
-	    try {
-	    //System.load("./opencv_ffmpeg2413_64.dll");
-	    } catch (UnsatisfiedLinkError e) {
-	        System.err.println("Native code library failed to load.\n" + e);
-	        System.exit(1);
-	    }
+		try {
+			//System.load("./opencv_ffmpeg2413_64.dll");
+		} catch (UnsatisfiedLinkError e) {
+			System.err.println("Native code library failed to load.\n" + e);
+			System.exit(1);
+		}
 	}
 
 
@@ -73,7 +73,7 @@ public class AnalyseVideo {
 
 		// make jframe visible
 		jframe.setVisible(true);
-		
+
 		HashMap<Integer, Mat> bestFrames = new HashMap<Integer, Mat>();
 		HashMap<Integer, Integer> bestSim = new HashMap<Integer, Integer>();
 		Mat transformee,saturee,objetrond;
@@ -90,40 +90,40 @@ public class AnalyseVideo {
 		while (camera.read(frame)) {
 			// If next video frame is available
 			//if (camera.read(frame)) {
-				
-				transformee=MaBibliothequeTraitementImageEtendue.transformeBGRversHSV(frame);
-				//la methode seuillage est ici extraite de l'archivage jar du meme nom 
-				saturee=MaBibliothequeTraitementImage.seuillage(transformee, 6, 170, 110);
-				objetrond = null;
-				//Création d'une liste des contours à partir de l'image saturée
-				ListeContours= MaBibliothequeTraitementImageEtendue .ExtractContours(saturee);
-				//Pour tous les contours de la liste
-				for (MatOfPoint contour: ListeContours  ){
-					// isole la forme
-					objetrond=MaBibliothequeTraitementImage.DetectForm(frame,contour);
-					// calcul de la similitude
-					tab=(identifiepanneau(objetrond));p=tab[0];
-					// si panneau détecté on l'ajoute au buffer 
-					if(p>=0) {buffer[j]=p;r=0;sim=tab[1];frametemp=frame.clone();}
-					// sinon on vide le buffer quand r==rmax
-					else {r++;if(r>rmax)buffer=nulltab.clone();}
-					// on affiche ensuite le panneau le plus représenté dans le buffer
-					j=(j+1)%tbuff;
-					if(j==0) {
-						bestp=bestPanneau(buffer);
-						if(bestp>=0) {
+
+			transformee=MaBibliothequeTraitementImageEtendue.transformeBGRversHSV(frame);
+			//la methode seuillage est ici extraite de l'archivage jar du meme nom 
+			saturee=MaBibliothequeTraitementImage.seuillage(transformee, 6, 170, 110);
+			objetrond = null;
+			//Création d'une liste des contours à partir de l'image saturée
+			ListeContours= MaBibliothequeTraitementImageEtendue .ExtractContours(saturee);
+			//Pour tous les contours de la liste
+			for (MatOfPoint contour: ListeContours  ){
+				// isole la forme
+				objetrond=MaBibliothequeTraitementImage.DetectForm(frame,contour);
+				// calcul de la similitude
+				tab=(identifiepanneau(objetrond));p=tab[0];
+				// si panneau détecté on l'ajoute au buffer 
+				if(p>=0) {buffer[j]=p;r=0;sim=tab[1];frametemp=frame.clone();}
+				// sinon on vide le buffer quand r==rmax
+				else {r++;if(r>rmax)buffer=nulltab.clone();}
+				// on affiche ensuite le panneau le plus représenté dans le buffer
+				j=(j+1)%tbuff;
+				if(j==0) {
+					bestp=bestPanneau(buffer);
+					if(bestp>=0) {
 						if(bestFrames.containsKey(bestp)) {
 							if(bestSim.get(bestp)<sim) {bestFrames.replace(bestp, frametemp);bestSim.replace(bestp, sim);}
 						}
 						else {bestFrames.put(bestp, frametemp);bestSim.put(bestp, sim);}}
-					}}
-				// Create new image icon object and convert Mat to Buffered
-				// Image
-				ImageIcon image = new ImageIcon(Mat2BufferedImage(frame));
-				// Update the image in the vidPanel
-				vidPanel.setIcon(image);
-				// Update the vidPanel in the JFrame
-				vidPanel.repaint();
+				}}
+			// Create new image icon object and convert Mat to Buffered
+			// Image
+			ImageIcon image = new ImageIcon(Mat2BufferedImage(frame));
+			// Update the image in the vidPanel
+			vidPanel.setIcon(image);
+			// Update the vidPanel in the JFrame
+			vidPanel.repaint();
 
 			//}
 		}
@@ -145,7 +145,7 @@ public class AnalyseVideo {
 		return image;
 	}
 
-	
+
 	public static BufferedImage Mat2bufferedImage(Mat image) {
 		MatOfByte bytemat = new MatOfByte();
 		Highgui.imencode(".jpg", image, bytemat);
@@ -174,12 +174,7 @@ public class AnalyseVideo {
 			scores[3]=MaBibliothequeTraitementImage.tauxDeSimilitude(objetrond,"ref90.jpg");
 			scores[4]=MaBibliothequeTraitementImage.tauxDeSimilitude(objetrond,"ref110.jpg");
 			scores[5]=MaBibliothequeTraitementImage.tauxDeSimilitude(objetrond,"refdouble.jpg");
-			/*scores[0]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"ref30.jpg");
-			scores[1]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"ref50.jpg");
-			scores[2]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"ref70.jpg");
-			scores[3]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"ref90.jpg");
-			scores[4]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"ref110.jpg");
-			scores[5]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"refdouble.jpg");*/
+
 
 			scoremax=scores[0];
 
@@ -190,8 +185,8 @@ public class AnalyseVideo {
 		int[] tab={indexmax,s};
 		return tab;
 	}
-	
-	
+
+
 	public static int bestPanneau(int[] buffer){
 		ArrayList<Integer> freq = new ArrayList<Integer>();
 		ArrayList<Integer> parcouru = new ArrayList<Integer>();
@@ -201,7 +196,7 @@ public class AnalyseVideo {
 			}
 			else {parcouru.add(ind);
 			freq.add(1);}			
-			}
+		}
 		int max=0;
 		for(int i=0;i<freq.size();i++) {
 			if(freq.get(i)>max) {max=freq.get(i);}
@@ -217,7 +212,7 @@ public class AnalyseVideo {
 		case 5:System.out.println("Panneau interdiction de dépasser détécté");break;
 		}
 		return indexmax;
-		
+
 	}
 
 

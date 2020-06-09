@@ -71,60 +71,60 @@ public class MaBibliothequeTraitementImageEtendue {
 		return channels;
 	}
 
-	   public static ImageData convertToSWT(BufferedImage bufferedImage) {
-	        if (bufferedImage.getColorModel() instanceof DirectColorModel) {
-	            DirectColorModel colorModel
-	                    = (DirectColorModel) bufferedImage.getColorModel();
-	            PaletteData palette = new PaletteData(colorModel.getRedMask(),
-	                    colorModel.getGreenMask(), colorModel.getBlueMask());
-	            ImageData data = new ImageData(bufferedImage.getWidth(),
-	                    bufferedImage.getHeight(), colorModel.getPixelSize(),
-	                    palette);
-	            WritableRaster raster = bufferedImage.getRaster();
-	            int[] pixelArray = new int[3];
-	            for (int y = 0; y < data.height; y++) {
-	                for (int x = 0; x < data.width; x++) {
-	                    raster.getPixel(x, y, pixelArray);
-	                    int pixel = palette.getPixel(new RGB(pixelArray[0],
-	                            pixelArray[1], pixelArray[2]));
-	                    data.setPixel(x, y, pixel);
-	                }
-	            }
-	            return data;
-	        }
-	        else if (bufferedImage.getColorModel() instanceof IndexColorModel) {
-	            IndexColorModel colorModel = (IndexColorModel)
-	                    bufferedImage.getColorModel();
-	            int size = colorModel.getMapSize();
-	            byte[] reds = new byte[size];
-	            byte[] greens = new byte[size];
-	            byte[] blues = new byte[size];
-	            colorModel.getReds(reds);
-	            colorModel.getGreens(greens);
-	            colorModel.getBlues(blues);
-	            RGB[] rgbs = new RGB[size];
-	            for (int i = 0; i < rgbs.length; i++) {
-	                rgbs[i] = new RGB(reds[i] & 0xFF, greens[i] & 0xFF,
-	                        blues[i] & 0xFF);
-	            }
-	            PaletteData palette = new PaletteData(rgbs);
-	            ImageData data = new ImageData(bufferedImage.getWidth(),
-	                    bufferedImage.getHeight(), colorModel.getPixelSize(),
-	                    palette);
-	            data.transparentPixel = colorModel.getTransparentPixel();
-	            WritableRaster raster = bufferedImage.getRaster();
-	            int[] pixelArray = new int[1];
-	            for (int y = 0; y < data.height; y++) {
-	                for (int x = 0; x < data.width; x++) {
-	                    raster.getPixel(x, y, pixelArray);
-	                    data.setPixel(x, y, pixelArray[0]);
-	                }
-	            }
-	            return data;
-	        }
-	        return null;
-	    }
-	
+	public static ImageData convertToSWT(BufferedImage bufferedImage) {
+		if (bufferedImage.getColorModel() instanceof DirectColorModel) {
+			DirectColorModel colorModel
+			= (DirectColorModel) bufferedImage.getColorModel();
+			PaletteData palette = new PaletteData(colorModel.getRedMask(),
+					colorModel.getGreenMask(), colorModel.getBlueMask());
+			ImageData data = new ImageData(bufferedImage.getWidth(),
+					bufferedImage.getHeight(), colorModel.getPixelSize(),
+					palette);
+			WritableRaster raster = bufferedImage.getRaster();
+			int[] pixelArray = new int[3];
+			for (int y = 0; y < data.height; y++) {
+				for (int x = 0; x < data.width; x++) {
+					raster.getPixel(x, y, pixelArray);
+					int pixel = palette.getPixel(new RGB(pixelArray[0],
+							pixelArray[1], pixelArray[2]));
+					data.setPixel(x, y, pixel);
+				}
+			}
+			return data;
+		}
+		else if (bufferedImage.getColorModel() instanceof IndexColorModel) {
+			IndexColorModel colorModel = (IndexColorModel)
+					bufferedImage.getColorModel();
+			int size = colorModel.getMapSize();
+			byte[] reds = new byte[size];
+			byte[] greens = new byte[size];
+			byte[] blues = new byte[size];
+			colorModel.getReds(reds);
+			colorModel.getGreens(greens);
+			colorModel.getBlues(blues);
+			RGB[] rgbs = new RGB[size];
+			for (int i = 0; i < rgbs.length; i++) {
+				rgbs[i] = new RGB(reds[i] & 0xFF, greens[i] & 0xFF,
+						blues[i] & 0xFF);
+			}
+			PaletteData palette = new PaletteData(rgbs);
+			ImageData data = new ImageData(bufferedImage.getWidth(),
+					bufferedImage.getHeight(), colorModel.getPixelSize(),
+					palette);
+			data.transparentPixel = colorModel.getTransparentPixel();
+			WritableRaster raster = bufferedImage.getRaster();
+			int[] pixelArray = new int[1];
+			for (int y = 0; y < data.height; y++) {
+				for (int x = 0; x < data.width; x++) {
+					raster.getPixel(x, y, pixelArray);
+					data.setPixel(x, y, pixelArray[0]);
+				}
+			}
+			return data;
+		}
+		return null;
+	}
+
 	//Methode qui permet d'afficher une image sur un panel
 	public static void afficheImage(String title, Mat img, Label imgLabel){
 		MatOfByte matOfByte=new MatOfByte();
@@ -134,18 +134,11 @@ public class MaBibliothequeTraitementImageEtendue {
 		try{
 			InputStream in=new ByteArrayInputStream(byteArray);
 			bufImage=ImageIO.read(in);
-			
+
 			File outputfile = new File("temp.jpg");
-			
+
 			ImageIO.write(bufImage, "jpg", outputfile);
 			imgLabel.setImage(new Image(Display.getDefault(),"temp.jpg"));
-			//imgLabel.setImage(new Image(Display.getCurrent(),convertToSWT(bufImage)));
-			/*
-			JFrame frame=new JFrame();
-			frame.setTitle(title);
-			frame.getContentPane().add(new JLabel(new ImageIcon(bufImage)));
-			frame.pack();
-			frame.setVisible(true);*/
 
 		}
 		catch(Exception e){
@@ -155,7 +148,7 @@ public class MaBibliothequeTraitementImageEtendue {
 
 	}
 
-	
+
 
 	//Methode qui permet d'extraire les contours d'une image donnee
 	public static List<MatOfPoint> ExtractContours(Mat input) {
@@ -254,7 +247,7 @@ public class MaBibliothequeTraitementImageEtendue {
 
 	}
 
-	
+
 
 	public static double angle(Point a, Point b, Point c) {
 		Point ab = new Point( b.x - a.x, b.y - a.y );
@@ -265,7 +258,7 @@ public class MaBibliothequeTraitementImageEtendue {
 		return Math.floor(alpha * 180. / Math.PI + 0.5);
 	}
 
-	
+
 	//methode à completer
 	public static double Similitude(Mat object,String signfile) {
 
@@ -282,111 +275,19 @@ public class MaBibliothequeTraitementImageEtendue {
 		Imgproc.cvtColor(object, grayObject, Imgproc.COLOR_BGRA2GRAY);
 		Core.normalize(grayObject, grayObject, 0, 255, Core.NORM_MINMAX);
 		Imgproc.resize(grayObject, grayObject, graySign.size());	
-		
-		/*
-		// extraction des caracteristiques
-		FeatureDetector orbDetector = FeatureDetector.create(FeatureDetector.ORB);
-		DescriptorExtractor orbExtractor = DescriptorExtractor.create(DescriptorExtractor.ORB);
-		MatOfKeyPoint objectKeypoints = new MatOfKeyPoint();
-		orbDetector.detect(grayObject, objectKeypoints);
-		MatOfKeyPoint signKeypoints = new MatOfKeyPoint();
-		orbDetector.detect(grayObject, signKeypoints);
-		Mat objectDescriptor = new Mat(object.rows(), object.cols(), object.type());
-		orbExtractor.compute(grayObject, objectKeypoints, objectDescriptor);
-		Mat signDescriptor = new Mat(panneauref.rows(), panneauref.cols(), panneauref.type());
-		orbExtractor.compute(graySign, signKeypoints, signDescriptor);
-		
-		MatOfDMatch matchs = new MatOfDMatch();
-		DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
-		matcher.match(objectDescriptor, signDescriptor, matchs);
-		
-		int corr=0;
-		String dump=matchs.dump();
-		dump=dump.substring(0, dump.length()-2);
-		String[] tdump=dump.split(";");
-		String[] dumpsplit;
-		int n=tdump.length;
-		float[] Tdist=new float[n];
-		for(int i=0;i<n-1;i++) {
-			dumpsplit=tdump[i].split(",");
-			Tdist[i]=Float.parseFloat(dumpsplit[3]);
-		}
-		ArrayList<Float> tab=new ArrayList<Float>();
-		for(float f:Tdist) {
-			tab.add(f);
-		}
-		tab.sort(null);
-		float somme=0;
-		int N=tab.size()/2;
-		for(int i=tab.size()-1;i>(tab.size()-N);i--) {
-			somme+=tab.get(i);
-		}
-		*/
+
+
 		int corr=0;
 		for(int i=0;i<grayObject.rows()-1;i++) {
 			for(int j=0;j<grayObject.cols()-1;j++) {
 				if(grayObject.get(i, j)!=null && graySign.get(i, j)!=null) {
 					if(grayObject.get(i, j)[0]<70 && graySign.get(i, j)[0]<70) {
 						corr++;
-						}
 					}
 				}
-			}/*
-		Mat grayObjTresh = new Mat(grayObject.rows(), grayObject.cols(), grayObject.type());
-		Mat graySignTresh = new Mat(grayObject.rows(), grayObject.cols(), grayObject.type());
-		int grisclair=68;
-		int noir = 200;
-		int grisfonce = 160;
-		int grismoyen =  120;
-		
-		double nivObj,nivSign,seuilObj,seuilSign;
-		for(int i=0;i<grayObjTresh.rows()-1;i++) {
-			for(int j=0;j<grayObjTresh.cols()-1;j++) {
-				if(grayObject.get(i, j)!=null) {
-				nivObj=grayObject.get(i, j)[0];
-				nivSign=graySign.get(i, j)[0];
-				if(nivObj<grisclair) {
-					grayObjTresh.put(i, j, 0);
-				}
-				else if(nivObj<grismoyen) {
-					grayObjTresh.put(i, j, grisclair);
-				}
-				else if(nivObj<grisfonce) {
-					grayObjTresh.put(i, j, grismoyen);
-				}
-				else if(nivObj<noir) {
-					grayObjTresh.put(i, j, grisfonce);
-				}
-				else {grayObjTresh.put(i, j, 255);}
-				
-				if(nivSign<grisclair) {
-					graySignTresh.put(i, j, 0);
-				}
-				else if(nivSign<grismoyen) {
-					graySignTresh.put(i, j, grisclair);
-				}
-				else if(nivSign<grisfonce) {
-					graySignTresh.put(i, j, grismoyen);
-				}
-				else if(nivSign<noir) {
-					graySignTresh.put(i, j, grisfonce);
-				}
-				else {graySignTresh.put(i, j, 255);}
-				seuilObj=grayObjTresh.get(i, j)[0];
-				seuilSign=graySignTresh.get(i, j)[0];
-				if(seuilObj==seuilSign && seuilObj==0) {
-					corr++;
-				}
-				}
 			}
-		}*/
-		//afficheImage("tresh sign", graySignTresh);
-		//afficheImage("tresh obj", grayObjTresh);
-		
+		}
 		return corr;
-		
-		
-
 
 	}
 

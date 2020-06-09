@@ -36,7 +36,7 @@ public class TraitementImage {
 			objetrond=MaBibliothequeTraitementImage.DetectForm(m,contour);
 
 			if (objetrond!=null){
-				
+
 				Scalar color = new Scalar(255, 255, 255);
 				Imgproc.drawContours(m, ListeContours, -1,color);
 				MaBibliothequeTraitementImageEtendue.afficheImage("Objet rond detécté",m,lblNewLabel);

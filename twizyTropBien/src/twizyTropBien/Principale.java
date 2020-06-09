@@ -37,13 +37,13 @@ import twizyTropBien.TraitementImage;
 
 public class Principale {
 
-	protected Shell shell;
+	protected Shell shlTwizyTropBien;
 	Label lblNewLabel;
 	Label Console;
 	private int currentImg = 0;
 	private int imgDataBaseLenght = 10;
 	private ArrayList<Image> dataBase;
-	
+
 	/**
 	 * Launch the application.
 	 * @param args
@@ -63,20 +63,20 @@ public class Principale {
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();
-		shell.open();
-		shell.layout();
-		
+		shlTwizyTropBien.open();
+		shlTwizyTropBien.layout();
+
 		PrintStream printStream = new PrintStream(new CustomOutputStream(Console));
 		System.setOut(printStream);
 		System.setErr(printStream);
-		
-		while (!shell.isDisposed()) {
+
+		while (!shlTwizyTropBien.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
 		}
 	}
-	
+
 	void nextImage(int dir)
 	{
 		if(dir == 1)
@@ -94,35 +94,35 @@ public class Principale {
 		System.out.println("Image "+(currentImg+1));
 	}
 
-	
+
 
 	/**
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		
+
 		dataBase = new ArrayList<Image>();
 		for (int i = 1; i < imgDataBaseLenght+1; i++) {
 			Image img = new Image(Display.getDefault(),"s_p"+Integer.toString(i)+".jpg");
 			System.out.println("img"+Integer.toString(i)+".png");
 			dataBase.add(img);
 		}		
-		
-		
-		
-		shell = new Shell();
-		shell.setSize(450, 300);
-		shell.setText("SWT Application");
-		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
-		
-		SashForm sashForm = new SashForm(shell, SWT.NONE);
-		
+
+
+
+		shlTwizyTropBien = new Shell();
+		shlTwizyTropBien.setSize(656, 368);
+		shlTwizyTropBien.setText("Twizy Trop Bien");
+		shlTwizyTropBien.setLayout(new FillLayout(SWT.HORIZONTAL));
+
+
+		SashForm sashForm = new SashForm(shlTwizyTropBien, SWT.NONE);
+
 		SashForm sashForm_1 = new SashForm(sashForm, SWT.VERTICAL);
-		
+
 		Group group = new Group(sashForm_1, SWT.NONE);
 		group.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
+
 		Button btnNewButton = new Button(group, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -131,7 +131,7 @@ public class Principale {
 			}
 		});
 		btnNewButton.setText("<-");
-		
+
 		Button btnIdentify = new Button(group, SWT.NONE);
 		btnIdentify.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -140,7 +140,7 @@ public class Principale {
 			}
 		});
 		btnIdentify.setText("Identify");
-		
+
 		Button btnNewButton_2 = new Button(group, SWT.NONE);
 		btnNewButton_2.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -148,9 +148,9 @@ public class Principale {
 				AnalyseVideo.Analyse();
 			}
 		});
-		
+
 		btnNewButton_2.setText("Video");
-		
+
 		Button btnNewButton_1 = new Button(group, SWT.NONE);
 		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -159,16 +159,16 @@ public class Principale {
 			}
 		});
 		btnNewButton_1.setText("->");
-		
+
 		Group group_1 = new Group(sashForm_1, SWT.NONE);
 		group_1.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
+
 		Console = new Label(group_1, SWT.NONE);
-		
-		sashForm_1.setWeights(new int[] {1, 5});
-		
+
+		sashForm_1.setWeights(new int[] {1, 3});
+
 		lblNewLabel = new Label(sashForm, SWT.NONE);
-		sashForm.setWeights(new int[] {1, 5});
+		sashForm.setWeights(new int[] {1, 3});
 
 	}
 }
