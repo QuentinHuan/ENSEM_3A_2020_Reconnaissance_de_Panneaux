@@ -3,4 +3,4 @@ Projet de reconnaissance de panneaux de signalisation en JAVA sur images fixes e
 
 Utilise OpenCV pour le traitement d'image, SWING pour l'interface utilisateur.
 
-![alt text](twizyTropBien/ref110.jpg?raw=true)
+![alt text](twizyTropBien/s_p1.jpg?raw=true)
